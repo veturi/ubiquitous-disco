@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wow? Disco!</title>
+  </head>
+  <body>
+
+  <div id="audio-elements"></div>
+    
+  <script type="text/javascript">
+    const instruments = [
+      { sample: './audio/clap.wav', key: '81' }, // Q
+      { sample: './audio/crash.wav', key: '87' }, // W
+      { sample: './audio/hihat.wav', key: '69' }, // E
+      { sample: './audio/kick.wav', key: '82' }, // R
+      { sample: './audio/openhat.wav', key: '65' }, // A
+      { sample: './audio/ride.wav', key: '83' }, // S
+      { sample: './audio/shaker.wav', key: '68' }, // D
+      { sample: './audio/snare.wav', key: '70' }, // F
+    ];
+
+    /**
+     * Creates HTML5 audio element from the instrument object with src and data-key attributes set
+     * @param   {object} instrument   the instrument object to create the element for
+     * @returns {audioElement}  the HTML5 audio element
+     */
+    function createInstrumentAudioElement(instrument) {
+      const audioElement = document.createElement("audio");
+
+      const sourceAttribute = document.createAttribute("src");
+      sourceAttribute.value = instrument.sample;
+      audioElement.setAttributeNode(sourceAttribute);
+
+      let dataAttribute = document.createAttribute("data-key");
+      dataAttribute.value = instrument.key;
+      audioElement.setAttributeNode(dataAttribute);
+
+      return audioElement;
+    } 
+
+    /**
+     * Rewinds and plays audio from HTML5 audio element
+     * @param   {event} e   the key press event
+     */
+    function playAudio(e) {
+      const audioElement = document.querySelector(`[data-key='${e.keyCode}']`);
+
+      if(!audioElement) return;
+
+      audioElement.currentTime = 0;
+      audioElement.play();
+    }
+
+    // Initialize the audio elements
+    instruments.forEach((instrument) => {
+      const audioElement = createInstrumentAudioElement(instrument)
+      const targetDiv = document.getElementById("audio-elements");
+      targetDiv.appendChild(audioElement);
+    });
+
+    // Add event listener to play audio
+    window.addEventListener('keydown', playAudio);
+  </script>
+  </body>
+</html>
