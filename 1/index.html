@@ -47,6 +47,9 @@
 
     /**
      * Creates HTML5 audio element from the instrument object with src and data-key attributes set
+     * TODO: How performant is playback via Audio DOM elements?
+     * TODO: Perhaps using HTMLAudioElement interface via new Audio() would be better?
+     * 
      * @param   {object} instrument   the instrument object to create the element for
      * @returns {element}  the HTML5 audio element
      */

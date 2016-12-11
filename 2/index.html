@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pico fantastico!</title>
+    <style>
+      body {
+        background: #333;
+      }
+
+      .clock {
+        text-align: center;
+        margin: 5rem 0;
+      }
+
+      .clock-face {
+        display: inline-block;
+        border: 10px solid #FFF;
+        width: 200px;
+        height: 200px;
+        border-radius: 999px;
+        position: relative;
+      }
+
+      .hand {
+        position: absolute;
+        display: inline-block;
+        height: 6px;
+        width: 45%;
+        background-color: #FFF;
+        top: 97px;
+        transform-origin: 0 50%;
+        transition: all 0.3s;
+        transition-timing-function: cubic-bezier(1, 0.01, 0.54, 1.72); 
+      }
+
+      .hand-second {
+        top: 99px;
+        height: 2px;
+      }
+      
+      .hand-minute {
+        height: 6px;
+      }
+
+      .hand-hour {
+        height: 6px;
+        width: 35%;
+      }
+    </style>
+  </head>
+  <body>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hand-second"></div>
+      <div class="hand hand-minute"></div>
+      <div class="hand hand-hour"></div>
+    </div>  
+  </div>
+  
+  <script type="text/javascript">
+    function advanceClock() {
+      const secondsHandElement = document.querySelector('.hand-second');
+      const minutesHandElement = document.querySelector('.hand-minute');
+      const hoursHandElement = document.querySelector('.hand-hour');
+
+      const time = new Date();
+      const secondDegrees = time.getSeconds();
+      const minuteDegrees = time.getMinutes();
+      const hourDegrees = time.getHours();
+
+      secondsHandElement.style.setProperty('transform', `rotate(${secondDegrees * 6 - 90}deg)`);
+      minutesHandElement.style.setProperty('transform', `rotate(${minuteDegrees * 6 - 90}deg)`);
+      hoursHandElement.style.setProperty('transform', `rotate(${hourDegrees * 15 - 90}deg)`);
+    };
+
+    window.setInterval(advanceClock, 1000);
+  </script>
+  </body>
+</html>
