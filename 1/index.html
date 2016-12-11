@@ -2,48 +2,92 @@
 <html>
   <head>
     <title>Wow? Disco!</title>
+    <style>
+      body {
+        background: #333;
+        color: #FFF;
+      }
+
+      #ui-elements {
+        margin-top: 5rem;
+        text-align: center;
+      }
+
+      .instrument {
+        display: inline-block;
+        padding: 1rem 1.5rem;
+        border: 1px solid #FFF;
+        margin: 0 0.75rem;
+        background: rgba(255,255,255,0.1);
+        transition: all 0.05s;
+      }
+
+      .instrument.playing {
+        box-shadow: 0 0 10px rgba(44, 158, 255, 0.85);
+        transform: scale(1.05);
+      }
+    </style>
   </head>
   <body>
 
+  <div id="ui-elements"></div>
   <div id="audio-elements"></div>
     
   <script type="text/javascript">
     const instruments = [
-      { sample: './audio/clap.wav', key: '81' }, // Q
-      { sample: './audio/crash.wav', key: '87' }, // W
-      { sample: './audio/hihat.wav', key: '69' }, // E
-      { sample: './audio/kick.wav', key: '82' }, // R
-      { sample: './audio/openhat.wav', key: '65' }, // A
-      { sample: './audio/ride.wav', key: '83' }, // S
-      { sample: './audio/shaker.wav', key: '68' }, // D
-      { sample: './audio/snare.wav', key: '70' }, // F
+      { sample: './audio/clap.wav', key: '81', label: 'Q' },
+      { sample: './audio/crash.wav', key: '87', label: 'W' },
+      { sample: './audio/hihat.wav', key: '69', label: 'E' },
+      { sample: './audio/kick.wav', key: '82', label: 'R' },
+      { sample: './audio/openhat.wav', key: '65', label: 'A' },
+      { sample: './audio/ride.wav', key: '83', label: 'S' },
+      { sample: './audio/shaker.wav', key: '68', label: 'D' },
+      { sample: './audio/snare.wav', key: '70', label: 'F' },
     ];
 
     /**
      * Creates HTML5 audio element from the instrument object with src and data-key attributes set
      * @param   {object} instrument   the instrument object to create the element for
-     * @returns {audioElement}  the HTML5 audio element
+     * @returns {element}  the HTML5 audio element
      */
     function createInstrumentAudioElement(instrument) {
-      const audioElement = document.createElement("audio");
+      const audioElement = document.createElement('audio');
 
-      const sourceAttribute = document.createAttribute("src");
+      const sourceAttribute = document.createAttribute('src');
       sourceAttribute.value = instrument.sample;
       audioElement.setAttributeNode(sourceAttribute);
 
-      let dataAttribute = document.createAttribute("data-key");
+      let dataAttribute = document.createAttribute('data-key');
       dataAttribute.value = instrument.key;
       audioElement.setAttributeNode(dataAttribute);
 
       return audioElement;
-    } 
+    }
+
+    /**
+     * Creates DIV wrapped interface elements from the instrument object
+     * @params  {object} instrument   the instrument object to create the element structure for
+     * @returns {element}   the UI HTML elements for rendering
+     */
+    function createInstrumentUIElement(instrument) {
+      const wrapperElement = document.createElement('div');
+      wrapperElement.className = "instrument";
+      wrapperElement.setAttribute('data-key', instrument.key);
+
+      const labelElement = document.createElement('label');
+      labelElement.textContent = instrument.label; 
+
+      wrapperElement.appendChild(labelElement);
+
+      return wrapperElement;
+    }
 
     /**
      * Rewinds and plays audio from HTML5 audio element
      * @param   {event} e   the key press event
      */
     function playAudio(e) {
-      const audioElement = document.querySelector(`[data-key='${e.keyCode}']`);
+      const audioElement = document.querySelector(`audio[data-key='${e.keyCode}']`);
 
       if(!audioElement) return;
 
@@ -51,15 +95,47 @@
       audioElement.play();
     }
 
+    /**
+     * Hilight the instrument UI element with specific class. Actual animation comes from CSS transformation
+     * @param   {event} e   the key press event
+     */
+    function triggerUiInstrumentHilight(e) {
+      const uiElement = document.querySelector(`div[data-key='${e.keyCode}']`);
+
+      if(!uiElement) return;
+
+      uiElement.classList.add('playing');
+    }
+
+    /**
+     * Remove hilight css class from the instrument UI element
+     * @param   {event} e   the key press event
+     */
+    function clearUiInstrumentHilight(e) {
+      const uiElement = document.querySelector(`div[data-key='${e.keyCode}']`);
+
+      if(!uiElement) return;
+
+      uiElement.classList.remove('playing');
+    }
+
     // Initialize the audio elements
     instruments.forEach((instrument) => {
-      const audioElement = createInstrumentAudioElement(instrument)
-      const targetDiv = document.getElementById("audio-elements");
-      targetDiv.appendChild(audioElement);
+      const audioElement = createInstrumentAudioElement(instrument);
+      const audioTargetDiv = document.getElementById('audio-elements');
+      audioTargetDiv.appendChild(audioElement);
+
+      const uiElement = createInstrumentUIElement(instrument);
+      const uiTargetDiv = document.getElementById('ui-elements');
+      uiTargetDiv.appendChild(uiElement);
     });
 
     // Add event listener to play audio
-    window.addEventListener('keydown', playAudio);
+    window.addEventListener('keydown', (e) => {
+      playAudio(e);
+      triggerUiInstrumentHilight(e);
+      window.setTimeout(clearUiInstrumentHilight, 200, e);
+    });
   </script>
   </body>
 </html>
