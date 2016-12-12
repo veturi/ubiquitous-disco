@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oh my!</title>
+    <style>
+      body {
+        background: #333;
+      }
+
+      .targer-wrapper {
+        text-align: center;
+      }
+
+      .target {
+        margin: 0;
+        padding: 0;
+        border: 1px solid #FFF;
+        background: orange;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <input type="range" id="input-padding">
+      <input type="range" id="input-border">
+      <input type="range" id="input-margin">
+      <input type="color" id="input-color">
+    </div>
+
+    <div class="target-wrapper">
+      <div class="target">This is the target element</div>
+    </div>
+
+    <script type="text/javascript">
+      const targetElement = document.querySelector('.target');
+      const paddingInputElement = document.querySelector('#input-padding');
+      const borderInputElement = document.querySelector('#input-border');
+      const marginInputElement = document.querySelector('#input-margin');
+      const colorInputElement = document.querySelector('#input-color');
+
+      paddingInputElement.value = 0;
+      borderInputElement.value = 1;
+      marginInputElement.value = 0;
+      colorInputElement.value = '#FFF';
+
+      paddingInputElement.addEventListener('input', (e) => {
+        targetElement.style.padding = e.srcElement.value + "px";
+      });
+
+      borderInputElement.addEventListener('input', (e) => {
+        targetElement.style.borderWidth = e.srcElement.value + "px";
+      });
+
+      marginInputElement.addEventListener('input', (e) => {
+        targetElement.style.margin = e.srcElement.value + "px";
+      });
+
+      colorInputElement.addEventListener('input', (e) => {
+        targetElement.style.backgroundColor = e.srcElement.value;
+      });
+    </script>
+  </body>
+</html>
